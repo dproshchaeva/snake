@@ -4,15 +4,16 @@ import sys
 SCREEN_SIZE = (800, 600)
 GAME_ICON = "snake.png"
 GAME_TITLE = "Snake"
-GAME_SPEED = 10
+INITIAL_GAME_SPEED = 10
 BACKGROUND_COLOR = (252, 232, 247)
+APPLES = 3
 
 
 def main():
     screen, clock = initialize_pygame()
     game_state = initialize_game_state()
     while game_state["program_running"]:
-        clock.tick(GAME_SPEED)
+        clock.tick(game_state['game_speed'])
         events = get_events()
         print(events)
         update_game_state(events, game_state)
@@ -34,6 +35,9 @@ def initialize_game_state():
     game_state = {
         "program_running": True,
         "game_running": False,
+        "game_paused": False,
+        "game_speed": INITIAL_GAME_SPEED,
+        "game_score": 0
     }
     return game_state
 
@@ -87,8 +91,17 @@ def update_game_state(events, game_state):
              if "right" in events:
                  pass
 
-            
+
 def initialize_new_game(game_state):
+    game_state["apples"] = place_apples(APPLES, game_state)
+    game_state["direction"] = [1, 0]
+    game_state["game_paused"] = False
+    game_state["score"] = 0
+    game_state["game_speed"] = INITIAL_GAME_SPEED
+
+
+
+def place_apples(n, game_state):
     pass
 
 def update_screen(screen, game_state):
