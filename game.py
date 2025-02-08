@@ -15,7 +15,7 @@ def main():
         clock.tick(GAME_SPEED)
         events = get_events()
         print(events)
-        update_game_state(game_state)
+        update_game_state(events, game_state)
         update_screen(screen, game_state)
     perform_shutdown()
 
@@ -61,9 +61,35 @@ def get_events():
     return events
 
 
-def update_game_state(game_state):
-    pass
+def update_game_state(events, game_state):
+    if "quit" in events:
+        game_state["program_running"] = False
+    elif not game_state["game_running"]:
+        if "escape" in events:
+            game_state["program_running"] = False
+        elif "enter" in events:
+            initialize_new_game(game_state)
+            game_state["program_running"] = True
+        elif game_state["game_paused"]:
+             if "escape" in events:
+                 game_state["game_running"] = False
+             elif "space" in events:
+                 game_state["game_paused"] = False
+        else:
+             if "escape" in events or "space" in events:
+                 game_state["game_paused"] = True
+             if "up" in events:
+                 pass
+             if "down" in events:
+                 pass
+             if "left" in events:
+                 pass
+             if "right" in events:
+                 pass
 
+            
+def initialize_new_game(game_state):
+    pass
 
 def update_screen(screen, game_state):
     screen.fill(BACKGROUND_COLOR)
