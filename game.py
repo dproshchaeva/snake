@@ -14,6 +14,8 @@ INITIAL_APPLES = 3
 INITIAL_SNAKE_LENGTH = 3
 SIZE_X = WIDTH // BLOCK_SIZE - WALL_BLOCKS * 2
 SIZE_Y = HEIGHT // BLOCK_SIZE - WALL_BLOCKS * 2
+APPLE_COLOR = (139, 0, 0)
+APPLE_RADIUS = BLOCK_SIZE // 4
 
 
 def main():
@@ -44,7 +46,7 @@ def initialize_game_state():
         "game_running": False,
         "game_paused": False,
         "game_speed": INITIAL_GAME_SPEED,
-        "game_score": 0
+        "score": 0
     }
     return game_state
 
@@ -73,7 +75,11 @@ def get_events():
 
 
 def update_game_state(events, game_state):
-    pass
+    check_key_presses(events, game_state)
+    if game_state["game_running"]:
+        move_snake(game_state)
+        check_collisions(game_state)
+        check_apple_consumption(game_state)
 
 
 def move_snake(game_state):
@@ -95,6 +101,8 @@ def check_apple_consumption(game_state):
         if apple == game_state["snake"][0]:
             game_state["apples"].remove(apple)
             place_apples(1, game_state)
+            game_state["score"] += 1
+            game_state["game_speed"] = round(game_state["game_speed"] * 1.1)
 
 
 def check_key_presses(events, game_state):
@@ -106,25 +114,26 @@ def check_key_presses(events, game_state):
         elif "enter" in events:
             initialize_new_game(game_state)
             game_state["program_running"] = True
-        elif game_state["game_paused"]:
-             if "escape" in events:
-                 game_state["game_running"] = False
-             elif "space" in events:
-                 game_state["game_paused"] = False
-        else:
-             if "escape" in events or "space" in events:
-                 game_state["game_paused"] = True
-             if "up" in events:
-                 game_state["direction"] = (0, -1)
-             if "down" in events:
-                 game_state["direction"] = (0, 1)
-             if "left" in events:
-                 game_state["direction"] = (-1, 0)
-             if "right" in events:
-                 game_state["direction"] = (1, 0)
+    elif game_state["game_paused"]:
+        if "escape" in events:
+            game_state["game_running"] = False
+        elif "space" in events:
+            game_state["game_paused"] = False
+    else:
+        if "escape" in events or "space" in events:
+            game_state["game_paused"] = True
+        if "up" in events:
+            game_state["direction"] = (0, -1)
+        if "down" in events:
+            game_state["direction"] = (0, 1)
+        if "left" in events:
+            game_state["direction"] = (-1, 0)
+        if "right" in events:
+            game_state["direction"] = (1, 0)
 
 
 def initialize_new_game(game_state):
+    game_state["snake"] = []
     place_snake(INITIAL_SNAKE_LENGTH, game_state)
     place_apples(INITIAL_APPLES, game_state)
     game_state["snake"] = []
@@ -140,7 +149,7 @@ def place_snake(length, game_state):
     y = SIZE_Y // 2
     game_state["snake"].append((x, y))
     for i in range(1, length):
-        game_state["snake"].append(x - i, y)
+        game_state["snake"].append((x - i, y))
 
 
 def place_apples(apples, game_state):
@@ -156,13 +165,49 @@ def place_apples(apples, game_state):
 
 def update_screen(screen, game_state):
     screen.fill(BACKGROUND_COLOR)
+    if not game_state["game_running"]:
+        print_new_game_message(screen)
+    elif game_state["game_paused"]:
+        print_game_paused_message(screen)
+    else:
+        draw_apples(screen, game_state["apples"])
+        draw_snake(screen, game_state["snake"])
+    draw_walls(screen)
+    print_score(screen, game_state["score"])
     pygame.display.flip()
 
+
+def print_new_game_message(screen):
+    pass
+
+
+def print_game_paused_message(screen):
+    pass
+
+
+def draw_apples(screen, apples):
+    for apple in apples:
+        x = apple[0] * BLOCK_SIZE + WALL_BLOCKS * BLOCK_SIZE
+        y = apple[1] * BLOCK_SIZE + WALL_BLOCKS * BLOCK_SIZE
+        rect = ((x, y), (BLOCK_SIZE, BLOCK_SIZE))
+        pygame.draw.rect(screen, APPLE_COLOR, rect, border_radius=APPLE_RADIUS)
 
 
 def perform_shutdown():
     pygame.init()
     sys.exit()
+
+
+def draw_snake(screen, snake):
+    pass
+
+
+def draw_walls(screen):
+    pass
+
+
+def print_score(screen, score):
+    pass
 
 
 main()
