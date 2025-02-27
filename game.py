@@ -19,7 +19,7 @@ INITIAL_APPLES = 3
 SNAKE_RADIUS = BLOCK_SIZE // 5
 APPLE_RADIUS = int(BLOCK_SIZE // 2.5)
 EYE_SIZE = BLOCK_SIZE // 7
-FONT_SIZE = int(WALL_BLOCKS * BLOCK_SIZE * 0.75)
+FONT_SIZE = int(WALL_BLOCKS * BLOCK_SIZE * 0.50)
 
 WALL_SIZE = BLOCK_SIZE * WALL_BLOCKS
 SIZE_X = WIDTH // BLOCK_SIZE - WALL_BLOCKS * 2
@@ -205,8 +205,8 @@ def update_screen(screen, game_state):
 
 def print_new_game_message(screen):
     font = pygame.font.SysFont("Courier New", FONT_SIZE, bold=True)
-    text1 = font.render("Press ENTER to start new game", True, TEXT_COLOR)
-    text2 = font.render("Press ESCAPE to quit", True, TEXT_COLOR)
+    text1 = font.render("нажмите space чтобы продолжить", True, TEXT_COLOR)
+    text2 = font.render("нажмите escape чтобы начать новую игру", True, TEXT_COLOR)
     text_rect1 = text1.get_rect()
     text_rect2 = text2.get_rect()
     text_rect1.center = (WIDTH // 2, HEIGHT // 2 - FONT_SIZE // 2)
@@ -278,7 +278,7 @@ def draw_walls(screen):
 
 def print_score(screen, score):
     font = pygame.font.SysFont("Courier New", FONT_SIZE, bold=True)
-    text = font.render("Score: " + str(score), True, TEXT_COLOR)
+    text = font.render("счёт: " + str(score), True, TEXT_COLOR)
     text_rect = text.get_rect()
     text_rect.midleft = (WALL_SIZE, WALL_SIZE // 2)
     screen.blit(text, text_rect)
@@ -286,7 +286,7 @@ def print_score(screen, score):
 
 def print_max_score(screen, score):
     font = pygame.font.SysFont("Courier New", FONT_SIZE, bold=True)
-    text = font.render("Hi: " + str(score), True, TEXT_COLOR)
+    text = font.render("яблочки: " + str(score), True, TEXT_COLOR)
     text_rect = text.get_rect()
     text_rect.midright = (WIDTH - WALL_SIZE, WALL_SIZE // 2)
     screen.blit(text, text_rect)
